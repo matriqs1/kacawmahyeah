@@ -1,0 +1,1001 @@
+/* =============================================
+   RESET & ROOT
+   ============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #000000;
+  --bg2:       #0c0c0c;
+  --bg3:       #161616;
+  --surface:   #1c1c1c;
+  --border:    #2e2e2e;
+  --border2:   #444;
+  --white:     #ffffff;
+  --white80:   rgba(255,255,255,.80);
+  --white50:   rgba(255,255,255,.50);
+  --white20:   rgba(255,255,255,.20);
+  --white08:   rgba(255,255,255,.08);
+  --red:       #cc1111;
+  --red-glow:  rgba(204,17,17,.35);
+  --web:       rgba(255,255,255,.14);
+  --shadow:    0 0 40px rgba(255,255,255,.06);
+  --shadow-lg: 0 0 80px rgba(255,255,255,.10);
+  --font-main: 'Outfit', sans-serif;
+  --font-serif:'Playfair Display', serif;
+  --font-block:'Bebas Neue', cursive;
+  --ease-web:  cubic-bezier(.22,.68,0,1.71);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* =============================================
+   SCREENS
+   ============================================= */
+.screen {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+}
+.screen.active { display: flex; }
+
+.screen-inner {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  padding: 2rem 1.2rem 3rem;
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+  animation: fadeUp .6s var(--ease-web) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   GLOBAL BACKGROUND — animated web grid
+   ============================================= */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    repeating-linear-gradient(0deg,   transparent, transparent 59px, rgba(255,255,255,.03) 60px),
+    repeating-linear-gradient(90deg,  transparent, transparent 59px, rgba(255,255,255,.03) 60px);
+  pointer-events: none;
+}
+
+/* =============================================
+   WEB CORNER DECORATIONS
+   ============================================= */
+.web-corner {
+  position: fixed;
+  width: 220px; height: 220px;
+  z-index: 1;
+  pointer-events: none;
+}
+.web-tl { top: 0;    left: 0; }
+.web-tr { top: 0;    right: 0;  transform: scaleX(-1); }
+.web-bl { bottom: 0; left: 0;   transform: scaleY(-1); }
+.web-br { bottom: 0; right: 0;  transform: scale(-1); }
+.web-corner svg { width: 100%; height: 100%; }
+
+/* =============================================
+   SPIDER SWING
+   ============================================= */
+.spider-swing {
+  position: fixed;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  transform-origin: top center;
+}
+.spider-thread {
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(255,255,255,.5), rgba(255,255,255,.05));
+  transition: height .3s;
+}
+.spider-icon { font-size: 1.8rem; }
+
+/* =============================================
+   WEB-CLICK FX
+   ============================================= */
+.web-fx {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  border-radius: 50%;
+  animation: webPop .5s ease-out forwards;
+}
+@keyframes webPop {
+  0%   { opacity: .7; transform: scale(0); }
+  60%  { opacity: .4; transform: scale(1); }
+  100% { opacity: 0;  transform: scale(1.4); }
+}
+
+/* =============================================
+   COMMON TYPOGRAPHY
+   ============================================= */
+.label-top {
+  font-size: .85rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--white50);
+  font-weight: 500;
+}
+
+h1 { font-family: var(--font-serif); }
+
+/* =============================================
+   SCREEN 0 — COUNTDOWN
+   ============================================= */
+#screen-cd {
+  background: radial-gradient(ellipse at 50% 30%, #1a1a1a 0%, #000 70%);
+}
+.cd-cake { font-size: 4rem; margin-bottom: 0.5rem; animation: bounce 2s infinite; }
+.cd-title {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.2;
+  background: linear-gradient(135deg, #fff 30%, #888);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.cd-unlock-date {
+  color: var(--white50);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  margin-top: -0.5rem;
+}
+.cd-timer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.cd-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--surface);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border2);
+  min-width: 80px;
+}
+.cd-num {
+  font-family: var(--font-block);
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--white);
+}
+.cd-label {
+  font-size: 0.75rem;
+  color: var(--white50);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+}
+.cd-sep {
+  font-family: var(--font-block);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--white50);
+  padding-top: 1rem;
+}
+.cd-hint {
+  color: var(--white50);
+  font-size: 0.9rem;
+  margin-top: 2rem;
+  animation: spiderPulse 2.5s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Balloons */
+.balloon {
+  position: fixed;
+  bottom: -150px;
+  width: 50px;
+  height: 65px;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  z-index: 10;
+  opacity: 0.8;
+  animation: floatUp linear forwards;
+  cursor: crosshair;
+  -webkit-tap-highlight-color: transparent;
+}
+.balloon::before {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 8px;
+  background: inherit;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+.balloon::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.3);
+}
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(calc(-100vh - 400px)) rotate(15deg); }
+}
+
+/* Balloon Pop Particles */
+.pop-particle {
+  position: fixed;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1000;
+  animation: popFly 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes popFly {
+  0% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0); opacity: 0; }
+}
+
+/* =============================================
+   SCREEN 1 — PASSWORD
+   ============================================= */
+#screen-pass {
+  background: radial-gradient(ellipse at 50% 30%, #1a1a1a 0%, #000 70%);
+}
+
+.lock-wrap {
+  animation: lockFloat 4s ease-in-out infinite;
+}
+@keyframes lockFloat {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-10px) rotate(2deg); }
+}
+
+.pass-title {
+  font-size: clamp(2rem, 7vw, 4rem);
+  letter-spacing: .04em;
+  background: linear-gradient(135deg, #fff, #888);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.pass-form {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.pass-input {
+  width: 100%;
+  padding: .9rem 3rem .9rem 1.2rem;
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  background: var(--bg3);
+  color: var(--white);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  letter-spacing: .12em;
+  outline: none;
+  transition: border-color .25s, box-shadow .25s;
+}
+.pass-input:focus {
+  border-color: var(--white50);
+  box-shadow: 0 0 0 3px var(--white08), 0 0 25px var(--white08);
+}
+.pass-input.shake { animation: shake .4s ease; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-10px); }
+  40%      { transform: translateX(10px); }
+  60%      { transform: translateX(-8px); }
+  80%      { transform: translateX(8px); }
+}
+
+.eye-btn {
+  position: absolute; right: .8rem; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  font-size: 1.1rem; opacity: .5;
+  transition: opacity .2s;
+}
+.eye-btn:hover { opacity: 1; }
+
+.btn-primary {
+  padding: .85rem 2rem;
+  border: none; border-radius: 12px;
+  background: var(--white);
+  color: #000;
+  font-family: var(--font-main);
+  font-size: 1rem; font-weight: 700;
+  letter-spacing: .05em;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  transition: transform .2s, box-shadow .2s, background .2s;
+  box-shadow: 0 4px 20px var(--white20);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255,255,255,.3);
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-arrow { font-size: 1.1rem; }
+
+.pass-error {
+  color: #ff5555;
+  font-size: .88rem;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.pass-error.show { opacity: 1; }
+
+.pass-hint {
+  color: var(--white50);
+  font-size: .85rem;
+  margin-top: .5rem;
+}
+
+/* =============================================
+   SCREEN 2 — GIFT BOX
+   ============================================= */
+#screen-gift {
+  background: radial-gradient(ellipse at 50% 40%, #1e1e1e 0%, #000 70%);
+}
+
+.gift-title {
+  font-size: clamp(2rem, 7vw, 3.8rem);
+  line-height: 1.2;
+  background: linear-gradient(135deg, #fff 30%, #888);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 5rem;
+}
+.italic-name {
+  font-family: var(--font-serif);
+  font-style: italic;
+  background: linear-gradient(135deg, #fff, #aaa);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.gift-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* ── CAKE ── */
+.cake-wrap {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+  animation: giftBob 3s ease-in-out infinite;
+  transition: transform .3s;
+  position: relative;
+}
+.cake-wrap:hover { animation: none; transform: scale(1.04); }
+@keyframes giftBob {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* Candles */
+.cake-candles {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  position: absolute;
+  top: -46px;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+}
+.candle {
+  width: 9px; height: 44px;
+  background: linear-gradient(180deg, #f0f0f0, #999);
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0 0 6px rgba(255,255,255,.2);
+}
+.flame {
+  position: absolute;
+  top: -22px; left: 50%;
+  transform: translateX(-50%);
+  width: 11px; height: 20px;
+  background: radial-gradient(ellipse at 50% 80%,
+    #fff 0%, #eee 35%, rgba(255,255,255,.3) 65%, transparent 100%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: flicker .45s ease-in-out infinite alternate;
+  box-shadow: 0 0 10px rgba(255,255,255,.9), 0 0 24px rgba(255,255,255,.4);
+}
+@keyframes flicker {
+  0%   { transform: translateX(-50%) scaleX(1)    scaleY(1)    rotate(-3deg); }
+  100% { transform: translateX(-50%) scaleX(0.78) scaleY(1.12) rotate(3deg); }
+}
+
+/* Tiers */
+.cake-tier {
+  position: relative;
+  border-radius: 8px;
+  overflow: visible;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.15), 0 6px 20px rgba(0,0,0,.6);
+}
+/* Subtle web texture via repeating gradient */
+.cake-tier::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 10px,
+    rgba(255,255,255,.03) 10px, rgba(255,255,255,.03) 11px
+  );
+  border-radius: 8px;
+  pointer-events: none;
+}
+.t3 { 
+  width: 100px; height: 48px; background: linear-gradient(160deg, #e8e8e8, #a0a0a0);
+  transition: transform .7s cubic-bezier(.34,1.56,.64,1), opacity .5s;
+  transform-origin: bottom right;
+}
+.t3.opened {
+  transform: translateY(-150px) translateX(-40px) rotate(-35deg);
+  opacity: 0;
+}
+.t2 { width: 148px; height: 60px; background: linear-gradient(160deg, #d4d4d4, #888); margin-top: -3px; }
+.t1 { width: 200px; height: 72px; background: linear-gradient(160deg, #c0c0c0, #666); margin-top: -3px; }
+
+/* Frosting */
+.tier-frost {
+  position: absolute;
+  top: -12px; left: 0; right: 0;
+  height: 16px;
+  background: white;
+  border-radius: 10px 10px 0 0;
+  z-index: 2;
+}
+/* Drip teardrops */
+.drip {
+  position: absolute;
+  bottom: -11px;
+  width: 12px; height: 14px;
+  background: white;
+  border-radius: 0 0 50% 50%;
+  transform: translateX(-50%);
+}
+
+/* Plate */
+.cake-plate {
+  width: 228px; height: 14px;
+  background: linear-gradient(180deg, #bbb, #555);
+  border-radius: 0 0 70px 70px / 0 0 14px 14px;
+  margin-top: -2px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.5), 0 0 30px rgba(255,255,255,.07);
+}
+
+.click-hint {
+  color: var(--white50);
+  font-size: .95rem;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+/* =============================================
+   SCREEN 3 — FLIP CARDS
+   ============================================= */
+#screen-cards {
+  background: radial-gradient(ellipse at 50% 30%, #181818 0%, #000 65%);
+  padding: 3rem 1rem;
+}
+
+#screen-cards .screen-inner { gap: 2rem; }
+
+.cards-title {
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  background: linear-gradient(135deg, #fff 30%, #888);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* Cards row */
+.cards-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Each flip card */
+.flip-card {
+  width: 220px; height: 300px;
+  perspective: 1200px;
+  cursor: pointer;
+  flex-shrink: 0;
+  will-change: transform;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+}
+.flip-card:hover {
+  transform: translateY(-12px) rotateX(8deg) rotateY(-4deg) scale(1.03);
+  box-shadow: 0 25px 40px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.08);
+  z-index: 10;
+}
+.flip-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .85s cubic-bezier(.4,0,.2,1);
+  border-radius: 18px;
+}
+.flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+
+/* Front face */
+.flip-front, .flip-back {
+  position: absolute; inset: 0;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.flip-front {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  box-shadow: 0 8px 40px rgba(255,255,255,.04), inset 0 1px 0 rgba(255,255,255,.08);
+  transition: box-shadow .3s;
+}
+.flip-card:hover .flip-front {
+  box-shadow: 0 12px 50px rgba(255,255,255,.10), inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+/* SVG web pattern inside front card */
+.front-web {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 40%, rgba(255,255,255,.03) 41%, rgba(255,255,255,.03) 42%, transparent 43%),
+    radial-gradient(circle at 50% 50%, transparent 60%, rgba(255,255,255,.025) 61%, rgba(255,255,255,.025) 62%, transparent 63%),
+    radial-gradient(circle at 50% 50%, transparent 80%, rgba(255,255,255,.02) 81%, rgba(255,255,255,.02) 82%, transparent 83%);
+  pointer-events: none;
+}
+.front-web::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(255,255,255,.04) 0deg 1deg,
+    transparent 1deg 26deg
+  );
+}
+
+.front-num {
+  font-family: var(--font-block);
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--white20);
+  letter-spacing: .05em;
+  position: relative; z-index: 1;
+}
+.front-hint {
+  font-size: .78rem;
+  color: var(--white50);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  position: relative; z-index: 1;
+}
+.front-spider {
+  font-size: 1.8rem;
+  position: relative; z-index: 1;
+  animation: spiderPulse 2.5s ease-in-out infinite;
+}
+@keyframes spiderPulse {
+  0%,100% { transform: scale(1);    opacity: .6; }
+  50%      { transform: scale(1.15); opacity: 1; }
+}
+
+/* Back face */
+.flip-back {
+  transform: rotateY(180deg);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  display: flex;
+  flex-direction: column;
+}
+.back-photo-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg2);
+}
+.back-photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.back-photo[src=""] { display: none; }
+.no-photo {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem;
+  color: var(--white20);
+  background: var(--bg2);
+}
+
+.back-info {
+  padding: .9rem 1rem;
+  background: linear-gradient(to top, #000, transparent);
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+}
+.back-num {
+  font-family: var(--font-block);
+  font-size: 1.6rem;
+  color: var(--white20);
+  line-height: 1;
+}
+.back-title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--white);
+  margin: .15rem 0;
+}
+.back-desc {
+  font-size: .78rem;
+  color: var(--white50);
+  line-height: 1.5;
+}
+
+/* ── Card fly-out from cake animation (3D scatter) ── */
+@keyframes cardShoot {
+  0% { 
+    opacity: 0; 
+    transform: translate3d(var(--startX, 0), var(--startY, 150px), -200px) scale(0.1); 
+    filter: blur(5px);
+  }
+  40% {
+    opacity: 1;
+    transform: translate3d(var(--midX, 0), -350px, 150px) rotateX(15deg) rotateY(var(--midRY, 0)) rotateZ(var(--midRZ, 0)) scale(1.15);
+    filter: blur(0);
+  }
+  100% { 
+    opacity: 1; 
+    transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1); 
+  }
+}
+.card-shooting {
+  animation: cardShoot 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* ── Card 2 & 4: expand to landscape on flip ── */
+#fcard2, #fcard4 {
+  transition:
+    width  .75s cubic-bezier(.4,0,.2,1),
+    height .75s cubic-bezier(.4,0,.2,1),
+    transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+    box-shadow 0.4s ease;
+}
+#fcard2.flipped, #fcard4.flipped {
+  width:  360px;
+  height: 218px;
+}
+/* Photo in card 2 & 4: contain so landscape shots aren't cropped */
+#fb2 .back-photo, #fb4 .back-photo {
+  object-fit: contain;
+  background: #0a0a0a;
+}
+
+.cards-cta {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: .8rem;
+  animation: fadeUp .6s var(--ease-web) both;
+}
+.cards-cta.show { display: flex; }
+.cta-sub { color: var(--white50); font-size: .88rem; letter-spacing: .1em; }
+.cards-cta .btn-primary { min-width: 220px; }
+
+/* =============================================
+   SCREEN 4 — MESSAGE
+   ============================================= */
+#screen-msg {
+  background: radial-gradient(ellipse at 50% 20%, #1a1a1a 0%, #000 65%);
+  padding: 3rem 1rem;
+}
+
+#sparkCanvas {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 100;
+  width: 100%; height: 100%;
+}
+
+.msg-title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  background: linear-gradient(135deg, #fff 30%, #888);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: fadeUp .7s .2s var(--ease-web) both;
+}
+
+.msg-card {
+  position: relative;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  max-width: 560px; width: 100%;
+  box-shadow: 0 20px 60px rgba(255,255,255,.05), inset 0 1px 0 rgba(255,255,255,.08);
+  animation: fadeUp .7s .4s var(--ease-web) both;
+  text-align: left;
+}
+
+/* Mini web corners inside message card */
+.msg-web-corner {
+  position: absolute;
+  width: 60px; height: 60px;
+  pointer-events: none; z-index: 0;
+}
+.msg-web-corner.tl { top: 0; left: 0; }
+.msg-web-corner.tr { top: 0; right: 0; transform: scaleX(-1); }
+.msg-web-corner svg { width: 100%; height: 100%; }
+
+.msg-body {
+  font-size: 1.05rem;
+  line-height: 2;
+  color: var(--white80);
+  white-space: pre-line;
+  position: relative; z-index: 1;
+}
+
+.msg-footer {
+  color: var(--white50);
+  font-size: .85rem;
+  text-align: center;
+  animation: fadeUp .7s .6s var(--ease-web) both;
+  line-height: 1.8;
+}
+.hb {
+  display: inline-block;
+  animation: heartbeat 1.2s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  14%      { transform: scale(1.3); }
+  28%      { transform: scale(1); }
+  42%      { transform: scale(1.3); }
+}
+.msg-date { opacity: .45; margin-top: .3rem; }
+
+/* =============================================
+   SCREEN 5 — BOUQUET
+   ============================================= */
+#screen-bouquet {
+  background: radial-gradient(ellipse at 50% 50%, #151515 0%, #000 80%);
+}
+
+.bq-title {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  background: linear-gradient(135deg, #fff, #777);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: fadeUp 1s ease-out forwards;
+}
+
+.bouquet-wrap {
+  position: relative;
+  margin: 2rem 0;
+  animation: floatBouquet 4s ease-in-out infinite;
+}
+
+.bouquet-svg {
+  width: 340px;
+  height: 420px;
+  filter: drop-shadow(0 0 12px rgba(255,255,255,0.3));
+}
+
+.svg-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLines 4.5s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes drawLines {
+  to { stroke-dashoffset: 0; }
+}
+
+.bq-desc {
+  font-size: 1.1rem;
+  color: var(--white50);
+  letter-spacing: 0.05em;
+  animation: fadeUp 1s 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.petal {
+  position: absolute;
+  width: 15px; height: 15px;
+  background: #fff;
+  border-radius: 50% 0 50% 50%;
+  opacity: 0;
+  animation: petalFall linear forwards;
+  filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+}
+
+@keyframes floatBouquet {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+@keyframes petalFall {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; }
+}
+
+.btn-bouquet {
+  margin-top: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.2s ease-out forwards;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+
+/* ── Large desktop (≥ 1280px) ── */
+@media (min-width: 1280px) {
+  .screen-inner   { max-width: 1100px; padding: 3rem 2rem 4rem; }
+  .cards-row      { gap: 2.5rem; }
+  .flip-card      { width: 260px; height: 360px; }
+  .front-num      { font-size: 6rem; }
+  .g-lid          { width: 200px; height: 68px; }
+  .g-base         { width: 220px; height: 140px; }
+  .msg-card       { max-width: 680px; padding: 3rem 2.5rem; }
+  .msg-body       { font-size: 1.12rem; line-height: 2.1; }
+  .web-corner     { width: 280px; height: 280px; }
+}
+
+/* ── Regular desktop / laptop (900px – 1279px) ── */
+@media (min-width: 900px) and (max-width: 1279px) {
+  .screen-inner   { padding: 2.5rem 2rem 3.5rem; }
+  .flip-card      { width: 230px; height: 320px; }
+  .g-lid          { width: 175px; height: 62px; }
+  .g-base         { width: 195px; height: 125px; }
+  .web-corner     { width: 240px; height: 240px; }
+}
+
+/* ── Tablet (600px – 899px) ── */
+@media (min-width: 600px) and (max-width: 899px) {
+  .screen-inner   { padding: 2rem 1.5rem 3rem; }
+
+  /* Cards: 2 columns on tablet */
+  .cards-row      { gap: 1.2rem; max-width: 520px; }
+  .flip-card      { width: calc(50% - .6rem); height: 280px; }
+  .front-num      { font-size: 4.5rem; }
+
+  /* Gift box slightly smaller */
+  .g-lid          { width: 145px; height: 50px; }
+  .g-base         { width: 165px; height: 105px; }
+
+  /* Message */
+  .msg-card       { padding: 2rem 1.5rem; }
+  .msg-body       { font-size: 1rem; }
+
+  /* Web corners */
+  .web-corner     { width: 170px; height: 170px; }
+
+  /* Password form full-width feel */
+  .pass-form      { max-width: 400px; }
+}
+
+/* ── Mobile (< 600px) ── */
+@media (max-width: 599px) {
+  /* Layout */
+  .screen-inner   { gap: 1.1rem; padding: 1.5rem .9rem 2.5rem; }
+
+  /* Cards: stack vertically, full width rows */
+  .cards-row      { flex-direction: column; align-items: center; gap: 1rem; }
+  .flip-card      { width: min(75vw, 260px); height: 200px; }
+  .flip-inner     { border-radius: 14px; }
+  .flip-front,
+  .flip-back      { border-radius: 14px; }
+  .front-num      { font-size: 3.2rem; }
+  .front-spider   { font-size: 1.4rem; }
+  .back-title     { font-size: .95rem; }
+  .back-desc      { font-size: .74rem; }
+
+  /* Card 2 & 4 landscape on mobile: full width, shorter */
+  #fcard2.flipped, #fcard4.flipped { width: min(90vw, 340px); height: min(57vw, 215px); }
+
+  /* Gift box */
+  .g-lid          { width: 120px; height: 43px; }
+  .g-base         { width: 138px; height: 88px; }
+  .lid-bow        { width: 44px; height: 30px; top: -14px; }
+  .bl, .br        { width: 18px; height: 18px; }
+  .bc             { width: 10px; height: 10px; top: 6px; }
+
+  /* Password */
+  .pass-form      { max-width: 100%; }
+  .pass-input     { font-size: .95rem; padding: .85rem 2.8rem .85rem 1rem; }
+  .btn-primary    { padding: .8rem 1.4rem; font-size: .95rem; }
+
+  /* Message */
+  .msg-card       { padding: 1.5rem 1rem; border-radius: 14px; }
+  .msg-body       { font-size: .95rem; line-height: 1.85; }
+
+  /* Web corners: smaller on mobile */
+  .web-corner     { width: 100px; height: 100px; }
+
+  /* Spider swing */
+  .spider-icon    { font-size: 1.3rem; }
+
+  /* Typography */
+  .pass-title     { font-size: clamp(1.7rem, 9vw, 2.5rem); }
+  .gift-title     { font-size: clamp(1.7rem, 8vw, 2.5rem); }
+  .cards-title    { font-size: clamp(1.3rem, 6vw, 2rem); }
+  .msg-title      { font-size: clamp(2rem, 9vw, 3rem); }
+}
+
+/* ── Very small phones (< 380px) ── */
+@media (max-width: 379px) {
+  .flip-card      { width: 88vw; height: 180px; }
+  .front-num      { font-size: 2.8rem; }
+  .web-corner     { width: 80px; height: 80px; }
+  .msg-body       { font-size: .88rem; }
+  .screen-inner   { padding: 1.2rem .7rem 2rem; }
+}
+
+/* ── Touch device: remove hover effects ── */
+@media (hover: none) {
+  .gift-box:hover { transform: none; }
+  .btn-primary:hover { transform: none; box-shadow: 0 4px 20px var(--white20); }
+  .flip-card:hover .flip-front { box-shadow: 0 8px 40px rgba(255,255,255,.04); }
+  .gift-box { animation: giftBob 3s ease-in-out infinite; }
+}
+
+/* ── Landscape phone ── */
+@media (max-width: 900px) and (orientation: landscape) {
+  .screen         { min-height: 100svh; }
+  .screen-inner   { padding-top: 1.2rem; padding-bottom: 1.5rem; gap: .9rem; }
+  .cards-row      { flex-direction: row; flex-wrap: wrap; }
+  .flip-card      { width: 160px; height: 220px; }
+  .lock-wrap svg  { width: 52px; height: 52px; }
+  .pass-title     { font-size: 1.8rem; }
+  .g-lid          { width: 110px; height: 38px; }
+  .g-base         { width: 128px; height: 82px; }
+  .web-corner     { width: 100px; height: 100px; }
+  .msg-card       { max-width: 94vw; }
+  .msg-body       { font-size: .9rem; line-height: 1.75; }
+}
+
