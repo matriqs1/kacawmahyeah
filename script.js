@@ -16,22 +16,22 @@ const CONFIG = {
   cards: [
     {
       title: "First Pap",
-      photo: "photos/pap.jpg",          // ← put photo path here, e.g. "photos/pap1.jpg"
+      photo: "pap.jpg",          // ← put photo path here, e.g. "photos/pap1.jpg"
       desc:  "maw pap gax, inget banget itu cara kamu nawarin",
     },
     {
       title: "Our First Selfie",
-      photo: "photos/selfie.jpg",          // ← e.g. "photos/selfie.jpg"
+      photo: "selfie.jpg",          // ← e.g. "photos/selfie.jpg"
       desc:  "waktu kamu lagi videoin kelas aku reflek bilang, coba pake kamera depan",
     },
     {
       title: "your art in my book",
-      photo: "photos/aboutyou.jpg",          // ← e.g. "photos/memory.jpg"
+      photo: "aboutyou.jpg",          // ← e.g. "photos/memory.jpg"
       desc:  "do u think i have forgotten???",
     },
     {
       title: "so sweet",
-      photo: "photos/notes.jpg",         // ← 4th card photo
+      photo: "notes.jpg",         // ← 4th card photo
       desc:  "maaciww jajannyaa",
     },
   ],
